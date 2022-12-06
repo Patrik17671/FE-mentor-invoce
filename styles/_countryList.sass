@@ -1,0 +1,54 @@
+.country
+
+	&__list
+		@apply pt-12 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-12
+
+	&__item
+		@apply col-span-1
+
+	&__detail
+		@apply py-20
+
+		h2
+			@apply mb-8
+
+		p
+			@apply mb-2
+
+.search
+	@apply relative rounded-sm shadow-md
+
+	input
+		@apply px-4 py-2
+
+.filter
+	@apply relative rounded-sm shadow-md
+	background: $Very-Light-Gray
+
+	&.active
+		.filter__results
+			opacity: 1
+			pointer-events: auto
+
+	&__results
+		@apply p-4 absolute left-0 top-8 w-full shadow-md opacity-0
+		background: $Very-Light-Gray
+		pointer-events: none
+		transition: all .3s
+
+.border-states
+	@apply px-4 py-1 shadow-md rounded-sm
+	border: 1px solid $Dark-Gray
+	line-height: 1
+
+.back-btn
+	@apply px-6 py-2 mb-20 inline-block rounded-md
+	line-height: 1
+	box-shadow: -2px -2px 14px 1px rgba($Very-Dark-Blue,0.35)
+
+.darkMode
+	.country__item,.filter,.filter__results, .search, .back-btn,.border-states
+		background: $Dark-Blue
+
+	.border-states
+		border: 0
