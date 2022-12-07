@@ -26,7 +26,7 @@ export async function getStaticProps(context) {
 
 export default function Country({country}){
 	const nativeName = country[0].name.nativeName;
-	const nativeNameData = nativeName[Object.keys(nativeName)[0]].common;
+	const nativeNameData = nativeName ? nativeName[Object.keys(nativeName)[0]].common : "";
 	
 	const currencies = country[0].currencies
 	const currenciesData = [];
@@ -58,7 +58,7 @@ export default function Country({country}){
 		<div className="container">
 			<div className="country__detail">
 				<Link className="back-btn" href={"/"}>
-					<i className="icon-arrow-left"></i>
+					<i className="icon-arrow-left" />
 					Back
 				</Link>
 				<div className="md:grid grid-cols-2 gap-20">
@@ -71,10 +71,10 @@ export default function Country({country}){
 								<p><strong>Population: </strong> {population}</p>
 								<p><strong>Region:</strong>  {region}</p>
 								<p><strong>SubRegion: </strong> {subregion}</p>
-								<p><strong>Capital:</strong> {capital[0]}</p>
+								<p><strong>Capital:</strong> {capital ? capital[0] : ""}</p>
 							</div>
 							<div>
-								<p><strong>Top Level Domain:</strong> {tld[0]}</p>
+								<p><strong>Top Level Domain:</strong> {tld ? tld[0] : ""}</p>
 								<p>
 									<strong>Currencies:</strong>
 									{currenciesData?.map((cur, index) => {

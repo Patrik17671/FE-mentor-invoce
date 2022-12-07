@@ -11,9 +11,9 @@ export default function Nav({darkMode,handleDarkMode}){
 					</Link>
 					<div className="mode-switcher">
 						{!darkMode ?
-							(<span onClick={handleDarkMode}> <i className="icon-moon-fill"></i> Dark Mode</span>)
+							(<span onClick={handleDarkMode}> <i className="icon-moon-fill" /> Dark Mode</span>)
 							:
-							(<span onClick={handleDarkMode}><i className="icon-sun"></i> Light Mode</span>)}
+							(<span onClick={handleDarkMode}><i className="icon-sun" /> Light Mode</span>)}
 					</div>
 				</div>
 			</div>
