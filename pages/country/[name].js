@@ -58,13 +58,14 @@ export default function Country({country}){
 		<div className="container">
 			<div className="country__detail">
 				<Link className="back-btn" href={"/"}>
+					<i className="icon-arrow-left"></i>
 					Back
 				</Link>
-				<div className="grid grid-cols-2 gap-20">
+				<div className="md:grid grid-cols-2 gap-20">
 					<img src={flags.svg} alt={name.common}/>
 					<div className="py-16">
 						<h2>{name.common}</h2>
-						<div className="grid grid-cols-2 gap-2">
+						<div className="sm:grid grid-cols-2 gap-2">
 							<div>
 								<p><strong>Native Name:</strong> {nativeNameData}</p>
 								<p><strong>Population: </strong> {population}</p>

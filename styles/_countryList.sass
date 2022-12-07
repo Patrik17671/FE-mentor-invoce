@@ -6,6 +6,13 @@
 	&__item
 		@apply col-span-1 rounded-lg overflow-hidden
 
+	&__item-content
+		@apply p-4
+		background: $White
+
+		h4
+			@apply text-lg font-bold mb-4
+
 	&__detail
 		@apply py-20
 
@@ -16,13 +23,14 @@
 			@apply mb-2
 
 .search
-	@apply relative rounded-sm shadow-md
+	@apply relative rounded-md shadow-md overflow-hidden
 
 	input
 		@apply px-4 py-2
+		width: 300px
 
 .filter
-	@apply relative rounded-sm shadow-md
+	@apply px-4 py-2 relative rounded-md shadow-md cursor-pointer
 	background: $Very-Light-Gray
 
 	&.active
@@ -31,10 +39,15 @@
 			pointer-events: auto
 
 	&__results
-		@apply p-4 absolute left-0 top-8 w-full shadow-md opacity-0
+		@apply p-4 absolute left-0 top-12 w-full rounded-md shadow-md opacity-0
 		background: $Very-Light-Gray
 		pointer-events: none
 		transition: all .3s
+
+		li
+			transition: all .2s
+			&:hover
+				@apply underline
 
 .border-states
 	@apply px-4 py-1 shadow-md rounded-sm
@@ -46,8 +59,11 @@
 	line-height: 1
 	box-shadow: -2px -2px 14px 1px rgba($Very-Dark-Blue,0.35)
 
+	i
+		@apply mr-2
+
 .darkMode
-	.country__item,.filter,.filter__results, .search, .back-btn,.border-states
+	.country__item,.country__item-content,.filter,.filter__results, .search,.search input, .back-btn,.border-states
 		background: $Dark-Blue
 
 	.border-states

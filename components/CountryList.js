@@ -57,10 +57,12 @@ export default function CountryList({search,searchedData,notFound,allCountries,i
 							key={index}
 						>
 							<img src={country.flags.svg} alt={country.name.common}/>
-							<h4>{country.name.common}</h4>
-							<p>Population: {country.population}</p>
-							<p>Region: {country.region}</p>
-							<p>Capital: {country.capital}</p>
+							<div className="country__item-content">
+								<h4>{country.name.common}</h4>
+								<p><strong>Population:</strong> {country.population}</p>
+								<p><strong>Region:</strong> {country.region}</p>
+								<p><strong>Capital:</strong> {country.capital}</p>
+							</div>
 						</Link>
 					)
 				})}

@@ -13,9 +13,9 @@ export default function CountryFilters({inputRef,handleSearch,handleOpenFilter,o
 	}
 	
 	return(
-		<div className="flex gap-4 md:justify-between items-center">
+		<div className="flex gap-4 flex-col md:flex-row md:justify-between items-start md:items-center">
 			<div className="search">
-				<input ref={inputRef} onChange={handleSearch} type="text"/>
+				<input placeholder="Search for a country..." ref={inputRef} onChange={handleSearch} type="text"/>
 			</div>
 			<div onClick={handleOpenFilter} className={`filter ${openFilter ? "active" : ""}`}>
 				<span>Filter by region: {region}</span>

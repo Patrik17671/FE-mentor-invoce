@@ -9,7 +9,16 @@
 		color: $Very-Dark-Blue
 		@apply shadow-lg
 
-
 header
 	@apply flex items-center sticky top-0
+	z-index: 50
 	height: 5rem
+
+.mode-switcher
+	@apply cursor-pointer
+
+	span
+		@apply flex items-center
+
+		i
+			@apply mr-2
