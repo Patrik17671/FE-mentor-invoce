@@ -58,7 +58,7 @@ export default function Country({country}){
 		<div className="container">
 			<div className="country__detail">
 				<Link className="back-btn" href={"/"}>
-					<i className="icon-arrow-left" />
+					<i className="icon-arrow-left"/>
 					Back
 				</Link>
 				<div className="md:grid grid-cols-2 gap-20">
