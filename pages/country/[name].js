@@ -77,7 +77,7 @@ export default function Country({country}){
 								<p><strong>Top Level Domain:</strong> {tld[0]}</p>
 								<p>
 									<strong>Currencies:</strong>
-									{currenciesData.map((cur, index) => {
+									{currenciesData?.map((cur, index) => {
 										return(
 											<span key={index}> {cur.name}</span>
 										)
@@ -85,7 +85,7 @@ export default function Country({country}){
 								</p>
 								<p>
 									<strong>Languages:</strong>
-									{languagesData.map((lang,index) => {
+									{languagesData?.map((lang,index) => {
 										return(
 											<span key={index}> {lang}, </span>
 										)
@@ -96,7 +96,7 @@ export default function Country({country}){
 						<div className="flex items-center mt-16">
 							<span><strong>Border Countries:</strong></span>
 							<ul className="ml-2 flex flex-wrap gap-2">
-								{borders.map((state, index) => {
+								{borders?.map((state, index) => {
 									return(
 										<li className="border-states" key={index}>{state}</li>
 									)

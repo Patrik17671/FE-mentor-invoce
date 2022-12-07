@@ -26,7 +26,7 @@ export default function CountryList({search,searchedData,notFound,allCountries,i
 	
 	if(search) return (
 		<div className="country__list">
-			{searchedData.map((country,index) => {
+			{searchedData?.map((country,index) => {
 				return(
 					<Link
 						href={`/country/${country.name.common}`}
@@ -49,7 +49,7 @@ export default function CountryList({search,searchedData,notFound,allCountries,i
 		:
 		(
 			<div className="country__list">
-				{allCountries.map((country,index) => {
+				{allCountries?.map((country,index) => {
 					return(
 						<Link
 							href={`/country/${country.name.common}`}
