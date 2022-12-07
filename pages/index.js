@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Countries from "../components/countries";
+import Countries from "../components/Countries";
 
 export async function getStaticProps() {
 	// Fetch data from external API
