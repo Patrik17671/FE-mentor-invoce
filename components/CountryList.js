@@ -49,7 +49,7 @@ export default function CountryList({search,searchedData,notFound,allCountries,i
 	)
 	
 	return (
-		notFound ? (<h1>Not found</h1>)
+		notFound ? (<h1 className="pt-12">Not found</h1>)
 		:
 		(
 			<div className="country__list">
