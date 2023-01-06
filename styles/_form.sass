@@ -1,0 +1,24 @@
+input[type="checkbox"]
+	display: none
+	+ label
+		@apply relative pl-6 flex items-center
+		transition: all .3s
+		line-height: 1.9em
+
+		&::before
+			@apply absolute text-center w-4 h-4 left-0
+			content: "\e905"
+			color: $blue3
+			font-family: 'icomoon'
+			font-size: 10px
+			line-height: 17px
+			background: $blue3
+			border-radius: 2px
+			top: 5px
+			transition: all .3s
+
+	&:checked
+		+ label
+			&::before
+				color: $white
+				background: $blue1

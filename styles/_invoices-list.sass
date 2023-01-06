@@ -1,0 +1,40 @@
+.invoices
+	&__header
+		@apply flex justify-between
+
+	&__title
+		span
+			font-size: 12px
+			font-weight: 500
+			color: $blue4
+
+	&__actions
+		@apply flex items-center
+
+		.invo-filter
+			@apply relative pr-8 font-bold
+			margin-right: 18px
+
+			i
+				@apply absolute
+				font-size: 8px
+				top: 7px
+				right: 12px
+				transition: all .3s
+
+			&.active
+
+				.invo-filter__options
+					@apply opacity-100 pointer-events-auto
+					transform: translate(-50%,0)
+
+				i
+					transform: rotate(180deg)
+
+			&__options
+				@apply p-6 absolute top-8 opacity-0 pointer-events-none
+				transform: translate(-50%,-15px)
+				left: 50%
+				transition: all .3s
+				border-radius: 8px
+				box-shadow: 0 10px 31px 1px rgba(0,0,0,0.14)

@@ -1,9 +1,13 @@
 import '../styles/main.sass'
+import Nav from "../components/Nav"
 
 function MyApp({Component, pageProps}) {
 	
 	return (
-		<h1>sdasdas</h1>
+		<div>
+			<Nav />
+			<Component {...pageProps} />
+		</div>
 	)
 }
 

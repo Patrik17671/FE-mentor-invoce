@@ -1,0 +1,43 @@
+nav
+	@apply fixed top-0 left-0 flex justify-between w-full
+	background: $gray2
+
+.nav
+	&__icon
+		@apply flex justify-center items-center relative cursor-pointer overflow-hidden
+		border-radius: 0 20px 20px 0
+		width: 72px
+		height: 72px
+		font-size: 28px
+		z-index: 1
+
+		i
+			z-index: 5
+
+		&::before
+			@apply left-0 top-0 absolute w-full h-full
+			content: ""
+			background: $blue1
+			z-index: 2
+
+		&::after
+			@apply left-0 bottom-0 absolute w-full
+			height: 50%
+			content: ""
+			background: $blue2
+			border-top-left-radius: 20px
+			z-index: 3
+
+	&__mode
+		@apply flex items-center
+
+		i
+			font-size: 20px
+
+	&__profile
+		@apply flex justify-center items-center
+		width: 80px
+
+		img
+			@apply rounded-full
+
