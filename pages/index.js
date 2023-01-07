@@ -1,9 +1,24 @@
 import Head from 'next/head'
 import Invoices from "../components/Invoices";
+import {useState} from "react";
 
-export default function Home({}) {
+import {data} from "./api/data"
+
+
+export const getStaticProps = async () => {
+	return{
+		props: {
+			invoicesData: data,
+		}
+	}
+}
+
+export default function Home({invoicesData}) {
+	
+	const [openFilter, setOpenFilter] = useState(false);
+	
 	return (
-		<div className="">
+		<div className="content">
 			<Head>
 				<title>Fe mentor invoces</title>
 				<meta name="description" content="Fe mentor invoces"/>
@@ -18,7 +33,7 @@ export default function Home({}) {
 							<span>7 invoces</span>
 						</div>
 						<div className="invoices__actions">
-							<span className="invo-filter active">
+							<span onClick={() => setOpenFilter(!openFilter)} className={`invo-filter ${openFilter ? "active" : ""}`}>
 								Filter
 								<i className="icon-arrow-down" />
 								
@@ -34,14 +49,14 @@ export default function Home({}) {
 								</div>
 							</span>
 							<a className="btn btn--icon">
-								<span>
+								<span className="icon">
 									<i className="icon-plus" />
 								</span>
-								New
+								New <span className="hidden md:inline font-bold">invoices</span>
 							</a>
 						</div>
 					</div>
-					<Invoices />
+					<Invoices invoicesData={invoicesData} />
 				</div>
 			</main>
 		</div>
