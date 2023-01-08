@@ -1,9 +1,9 @@
-
-export default function Invoices({invoicesData}){
+import Link from "next/link";
+export default function Invoices({invoices}){
 	
-	console.log(invoicesData)
+	console.log(invoices)
 	
-	invoicesData.map((invo,index) => {
+	invoices.map((invo,index) => {
 		return console.log(index)
 	})
 	
@@ -14,17 +14,19 @@ export default function Invoices({invoicesData}){
 	
 	return(
 		<ul className="invoices__list">
-			{invoicesData.map(invoices => (
+			{invoices.map(invoices => (
 				<li key={invoices.id}>
-					<span className="code">#{invoices.id}</span>
-					<span className="date">Due  { formatDate(invoices.paymentDue).toLocaleDateString('en-us', dateOptions)}</span>
-					<span className="name">{invoices.clientName}</span>
-					<span className="price">£ {invoices.total}</span>
-					<div className={`status ${invoices.status}`}>
-						<span className="dot" />
-						{invoices.status}
-					</div>
-					<i className="icon-arrow-right hidden md:block" />
+					<Link href={`/invoice/${invoices.id}`}>
+						<span className="code">#{invoices.id}</span>
+						<span className="date">Due  { formatDate(invoices.paymentDue).toLocaleDateString('en-us', dateOptions)}</span>
+						<span className="name">{invoices.clientName}</span>
+						<span className="price">£ {invoices.total}</span>
+						<div className={`status ${invoices.status}`}>
+							<span className="dot" />
+							{invoices.status}
+						</div>
+						<i className="icon-arrow-right hidden md:block" />
+					</Link>
 				</li>
 			))}
 		</ul>

@@ -32,7 +32,7 @@
 					transform: rotate(180deg)
 
 			&__options
-				@apply p-6 absolute top-8 opacity-0 pointer-events-none
+				@apply p-6 absolute top-8 opacity-0 pointer-events-none bg-white
 				transform: translate(-50%,-15px)
 				left: 50%
 				transition: all .3s
@@ -41,7 +41,7 @@
 
 	&__list
 
-		li
+		a
 			@apply grid md:flex md:justify-between md:items-center grid-cols-2 grid-rows-3 w-full mb-4 px-6 md:px-8 py-6 md:py-4 bg-white
 			border-radius: 8px
 
@@ -52,11 +52,6 @@
 				font-size: 12px
 				line-height: 15px
 
-			.dot
-				width: 8px
-				height: 8px
-				border-radius: 50%
-				margin-right: 8px
 
 			.code
 				@apply col-start-1 row-start-1 font-bold
@@ -76,28 +71,38 @@
 				letter-spacing: -0.8px
 				min-width: 70px
 
-			.status
-				@apply ml-auto md:ml-0 flex justify-center items-center col-start-2 row-start-2 row-span-2 mt-2 md:mt-0 font-bold
-				height: 40px
-				border-radius: 4px
-				line-height: 1em
-				font-size: 12px
-				width: 104px
 
-				&.pending
-					background: rgba(#FF8F00, 0.06)
-					color: #FF8F00
-					.dot
-						background: #FF8F00
 
-				&.paid
-					background: rgba(#33D69F, 0.06)
-					color: #33D69F
-					.dot
-						background: #33D69F
+.invoices__list,
+.invoice__header
+	.dot
+		width: 8px
+		height: 8px
+		border-radius: 50%
+		margin-right: 8px
 
-				&.draft
-					background: rgba(#373B53, 0.06)
-					color: #373B53
-					.dot
-						background: #373B53
+	.status
+		@apply ml-auto md:ml-0 flex justify-center items-center col-start-2 row-start-2 row-span-2 mt-2 md:mt-0 font-bold
+		height: 40px
+		border-radius: 4px
+		line-height: 1em
+		font-size: 12px
+		width: 104px
+
+		&.pending
+			background: rgba(#FF8F00, 0.06)
+			color: #FF8F00
+			.dot
+				background: #FF8F00
+
+		&.paid
+			background: rgba(#33D69F, 0.06)
+			color: #33D69F
+			.dot
+				background: #33D69F
+
+		&.draft
+			background: rgba(#373B53, 0.06)
+			color: #373B53
+			.dot
+				background: #373B53

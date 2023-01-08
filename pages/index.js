@@ -1,14 +1,20 @@
 import Head from 'next/head'
 import Invoices from "../components/Invoices";
 import {useState} from "react";
-
 import {data} from "./api/data"
+
+let storageData = data;
+
+if(typeof window !== 'undefined'){
+	localStorage.getItem("invoicesItems") !== "" ?
+		localStorage.setItem("invoicesItems", JSON.stringify(storageData)) : "";
+}
 
 
 export const getStaticProps = async () => {
 	return{
 		props: {
-			invoicesData: data,
+			invoicesData: storageData,
 		}
 	}
 }
@@ -16,6 +22,7 @@ export const getStaticProps = async () => {
 export default function Home({invoicesData}) {
 	
 	const [openFilter, setOpenFilter] = useState(false);
+	const [invoices, setInvoices] = useState(invoicesData)
 	
 	return (
 		<div className="content">
@@ -25,12 +32,12 @@ export default function Home({invoicesData}) {
 				<link rel="icon" href="/favicon.ico"/>
 			</Head>
 			
-			<main className="pt-28">
+			<main>
 				<div className="container">
 					<div className="invoices__header">
 						<div className="invoices__title">
 							<h1>Invoices</h1>
-							<span>7 invoces</span>
+							<span>{invoicesData.length} invoces</span>
 						</div>
 						<div className="invoices__actions">
 							<span onClick={() => setOpenFilter(!openFilter)} className={`invo-filter ${openFilter ? "active" : ""}`}>
@@ -56,7 +63,7 @@ export default function Home({invoicesData}) {
 							</a>
 						</div>
 					</div>
-					<Invoices invoicesData={invoicesData} />
+					<Invoices invoices={invoices} />
 				</div>
 			</main>
 		</div>

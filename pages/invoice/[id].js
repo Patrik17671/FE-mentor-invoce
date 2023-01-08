@@ -1,4 +1,5 @@
-import {data} from "../api/data"
+import {data} from "../api/data";
+import Link from "next/link";
 export async function getStaticPaths() {
 	console.log(data)
 	const paths = data.map(invoice => {
@@ -22,7 +23,7 @@ export async function getStaticProps(context) {
 
 export default function Invoice({selectedInvoice}){
 	const invoiceIndex = data.findIndex(x => x.id === selectedInvoice)
-	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue, total} = data[invoiceIndex]
+	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = data[invoiceIndex]
 	console.log(selectedInvoice)
 	console.log(data[2])
 	
@@ -34,6 +35,24 @@ export default function Invoice({selectedInvoice}){
 	return(
 		<div className="content">
 			<div className="container">
+				<Link href={"/"} className="back-btn mb-8">
+					<i className="icon-arrow-left"/>
+					Go back
+				</Link>
+				<div className="invoice__header">
+					<div className="flex justify-between w-full  md:justify-start items-center">
+						<span className="mr-4">Status</span>
+						<span className={`status ${status}`}>
+							<div className="dot"/>
+							{status}
+						</span>
+					</div>
+					<div className="invoice__actions">
+						<a className="btn btn--light">Edit</a>
+						<a className="btn btn--delete">Delete</a>
+						<a className="btn btn--primary">Mark as Paid</a>
+					</div>
+				</div>
 				<div className="invoice__wrapper">
 					<div className="md:flex justify-between">
 						<div className="mb-8 md:mb-0">
@@ -88,7 +107,6 @@ export default function Invoice({selectedInvoice}){
 						<span>Grand Total</span>
 						<span>£ {total}</span>
 					</div>
-					
 				</div>
 			</div>
 		</div>
