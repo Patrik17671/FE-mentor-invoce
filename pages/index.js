@@ -1,32 +1,25 @@
 import Head from 'next/head'
 import Invoices from "../components/Invoices";
-import {useState,useMemo} from "react";
-import {data} from "./api/data"
+import {useState,useMemo,useEffect} from "react";
 
-let storageData = data;
-
-if(typeof window !== 'undefined'){
-	localStorage.getItem("invoicesItems") !== "" ?
-		localStorage.setItem("invoicesItems", JSON.stringify(storageData)) : "";
-}
-
-
-export const getStaticProps = async () => {
-	return{
-		props: {
-			invoicesData: storageData,
-		}
-	}
-}
-
-export default function Home({invoicesData}) {
+export default function Home() {
 	
+	//Variables
 	const statuses = ["paid","pending","draft"];
 	
+	//States
 	const [openFilter, setOpenFilter] = useState(false);
-	const [invoices, setInvoices] = useState(invoicesData);
+	const [invoices, setInvoices] = useState([]);
 	const [activeStatuses, setActiveStatuses] = useState([]);
+
+	//Get data
+	useEffect(() => {
+		setInvoices(JSON.parse(localStorage.getItem('invoicesItems')))
+	}, []);
+
+	console.log(invoices)
 	
+	//Change active statuses
 	const toggleStatus = (status) => {
 		if (activeStatuses.includes(status)) {
 			setActiveStatuses(activeStatuses.filter((s) => s !== status));
@@ -35,15 +28,13 @@ export default function Home({invoicesData}) {
 		}
 	};
 	
+	//Filter by status
 	const filteredInvoices = useMemo(() => {
-		
 		if (activeStatuses.length === 0) {
 			return invoices;
 		}
-		
 		return invoices.filter(invoice => activeStatuses.includes(invoice.status));
-		
-	},[activeStatuses]);
+	},[activeStatuses,invoices]);
 	
 	return (
 		<div className="content">
@@ -58,7 +49,7 @@ export default function Home({invoicesData}) {
 					<div className="invoices__header">
 						<div className="invoices__title">
 							<h1>Invoices</h1>
-							<span>{invoicesData.length} invoces</span>
+							{/*<span>{invoices.length} invoces</span>*/}
 						</div>
 						<div className="invoices__actions">
 							<span onClick={() => setOpenFilter(!openFilter)} className={`invo-filter ${openFilter ? "active" : ""}`}>

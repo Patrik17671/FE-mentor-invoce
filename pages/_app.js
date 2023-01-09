@@ -1,13 +1,16 @@
-import '../styles/main.sass'
-import Nav from "../components/Nav"
+import '../styles/main.sass';
+import Nav from "../components/Nav";
+
+import store from '../lib/store'
+import { Provider } from 'react-redux'
 
 function MyApp({Component, pageProps}) {
 	
 	return (
-		<div>
+		<Provider store={store}>
 			<Nav />
 			<Component {...pageProps} />
-		</div>
+		</Provider>
 	)
 }
 

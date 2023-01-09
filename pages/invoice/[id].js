@@ -1,5 +1,6 @@
 import {data} from "../api/data";
 import Link from "next/link";
+import EditInvoice from "../../components/EditInvoice.js"
 export async function getStaticPaths() {
 	// console.log(data)
 	const paths = data.map(invoice => {
@@ -24,8 +25,6 @@ export async function getStaticProps(context) {
 export default function Invoice({selectedInvoice}){
 	const invoiceIndex = data.findIndex(x => x.id === selectedInvoice)
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = data[invoiceIndex]
-	// console.log(selectedInvoice)
-	// console.log(data[2])
 	
 	const dateOptions = {year: 'numeric', month: 'short', day: 'numeric' };
 	const formatDate = (date) => {
@@ -34,6 +33,7 @@ export default function Invoice({selectedInvoice}){
 	
 	return(
 		<div className="content">
+			<EditInvoice />
 			<div className="container">
 				<Link href={"/"} className="back-btn mb-8">
 					<i className="icon-arrow-left"/>
