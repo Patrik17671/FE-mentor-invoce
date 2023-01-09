@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Invoices from "../components/Invoices";
-import {useState} from "react";
+import {useState,useMemo} from "react";
 import {data} from "./api/data"
 
 let storageData = data;
@@ -21,8 +21,29 @@ export const getStaticProps = async () => {
 
 export default function Home({invoicesData}) {
 	
+	const statuses = ["paid","pending","draft"];
+	
 	const [openFilter, setOpenFilter] = useState(false);
-	const [invoices, setInvoices] = useState(invoicesData)
+	const [invoices, setInvoices] = useState(invoicesData);
+	const [activeStatuses, setActiveStatuses] = useState([]);
+	
+	const toggleStatus = (status) => {
+		if (activeStatuses.includes(status)) {
+			setActiveStatuses(activeStatuses.filter((s) => s !== status));
+		} else {
+			setActiveStatuses([...activeStatuses, status]);
+		}
+	};
+	
+	const filteredInvoices = useMemo(() => {
+		
+		if (activeStatuses.length === 0) {
+			return invoices;
+		}
+		
+		return invoices.filter(invoice => activeStatuses.includes(invoice.status));
+		
+	},[activeStatuses]);
 	
 	return (
 		<div className="content">
@@ -45,14 +66,18 @@ export default function Home({invoicesData}) {
 								<i className="icon-arrow-down" />
 								
 								<div className="invo-filter__options">
-									<input  type="checkbox" id="draft"/>
-									<label htmlFor="draft">Draft</label>
-									
-									<input  type="checkbox" id="pending"/>
-									<label htmlFor="pending">Pending</label>
-									
-									<input  type="checkbox" id="paid"/>
-									<label htmlFor="paid">Paid</label>
+									{statuses.map((status,index) => {
+										return(
+											<div key={index}>
+												<input
+													type="checkbox"
+													checked={activeStatuses.includes(status)}
+													onChange={() => toggleStatus(status)}
+													id={status}/>
+												<label htmlFor={status}>{status}</label>
+											</div>
+										)
+									})}
 								</div>
 							</span>
 							<a className="btn btn--icon">
@@ -63,7 +88,7 @@ export default function Home({invoicesData}) {
 							</a>
 						</div>
 					</div>
-					<Invoices invoices={invoices} />
+					<Invoices filteredInvoices={filteredInvoices} />
 				</div>
 			</main>
 		</div>

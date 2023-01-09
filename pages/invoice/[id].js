@@ -1,7 +1,7 @@
 import {data} from "../api/data";
 import Link from "next/link";
 export async function getStaticPaths() {
-	console.log(data)
+	// console.log(data)
 	const paths = data.map(invoice => {
 		return {
 			params: {id: invoice.id}
@@ -24,8 +24,8 @@ export async function getStaticProps(context) {
 export default function Invoice({selectedInvoice}){
 	const invoiceIndex = data.findIndex(x => x.id === selectedInvoice)
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = data[invoiceIndex]
-	console.log(selectedInvoice)
-	console.log(data[2])
+	// console.log(selectedInvoice)
+	// console.log(data[2])
 	
 	const dateOptions = {year: 'numeric', month: 'short', day: 'numeric' };
 	const formatDate = (date) => {

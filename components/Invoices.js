@@ -1,11 +1,6 @@
 import Link from "next/link";
-export default function Invoices({invoices}){
+export default function Invoices({filteredInvoices}){
 	
-	console.log(invoices)
-	
-	invoices.map((invo,index) => {
-		return console.log(index)
-	})
 	
 	const dateOptions = {year: 'numeric', month: 'short', day: 'numeric' };
 	const formatDate = (date) => {
@@ -14,7 +9,7 @@ export default function Invoices({invoices}){
 	
 	return(
 		<ul className="invoices__list">
-			{invoices.map(invoices => (
+			{filteredInvoices.map(invoices => (
 				<li key={invoices.id}>
 					<Link href={`/invoice/${invoices.id}`}>
 						<span className="code">#{invoices.id}</span>
