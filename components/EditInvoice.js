@@ -1,91 +1,253 @@
-export default function editInvoice(){
+import {dateOptions, formatDate} from "../lib/functions";
+import {useForm,useFieldArray} from "react-hook-form";
+import {useDispatch} from "react-redux";
+import {setEditInvoice} from "../lib/invoicesSlice";
+
+export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
+	
+	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceData;
+	
+	//Redux dispatch
+	const dispatch = useDispatch();
+	
+	//Form function
+	const {control,register, handleSubmit, formState:{ errors }} = useForm({
+	});
+	
+	const { invoiceItems, fields } = useFieldArray({
+		control,
+		name: "items" // unique name for your Field Array
+	});
+
+	//Set form data to redux
+	const submitForm = (formData) => {
+		dispatch(setEditInvoice([
+			{
+				id: id,
+				clientName: formData.clientName,
+				clientEmail: formData.clientEmail,
+				clientAddress: {street: formData.clientAddress.street, city: formData.clientAddress.city, postCode: formData.clientAddress.postCode, country: formData.clientAddress.country},
+				senderAddress: {street: formData.senderAddress.street, city: formData.senderAddress.city, postCode: formData.senderAddress.postCode, country: formData.senderAddress.country},
+				items: formData.items,
+				description: formData.description,
+				status: formData.status,
+				total: formData.total,
+				// paymentTerms: formData.paymentTerms,
+				createdAt: formData.createdAt,
+				paymentDue: formData.paymentDue,
+			}
+		]))
+		setDataChanged(!dataChanged);
+	}
+	
 	return(
-		<div className="edit overlay">
-			<div className="">
-				<form action="">
-					<h1>Edit #XM914</h1>
+		<div className="edit">
+			<div className="overlay" onClick={() => setActiveEdit(false)} />
+			<div className="edit__content">
+				<form onSubmit={handleSubmit(submitForm)}>
+					<h1>Edit #{id}</h1>
 					
 					<h3>Bill From</h3>
 					
 					<div className="input__wrapper">
 						<label htmlFor="streetAddress">Street Address</label>
-						<input type="text" id="streetAddress"/>
+						<input
+							type="text" id="streetAddress"
+							defaultValue={senderAddress.street}
+							{...register(`senderAddress.street`)}
+						/>
+						{errors.streetAddress && <span>This field is required</span>}
 					</div>
-					<div className="grid grid-cols-2 gap-4">
-						<div className="input__wrapper">
-							<label htmlFor="streetAddress">City</label>
-							<input type="text" id="streetAddress"/>
+					<div className="grid grid-cols-6 gap-x-4">
+						<div className="input__wrapper col-span-3 md:col-span-2">
+							<label htmlFor="city">City</label>
+							<input
+								type="text"
+								id="city"
+								defaultValue={senderAddress.city}
+								{...register("senderAddress.city", { required: true })}
+							/>
 						</div>
-						<div className="input__wrapper">
-							<label htmlFor="streetAddress">Post Code</label>
-							<input type="text" id="streetAddress"/>
+						<div className="input__wrapper col-span-3 md:col-span-2">
+							<label htmlFor="postCode">Post Code</label>
+							<input
+								type="text"
+								id="postCode"
+								defaultValue={senderAddress.postCode}
+								{...register(`senderAddress.postCode`)}
+							/>
 						</div>
-					</div>
-					<div className="input__wrapper">
-						<label htmlFor="streetAddress">Country</label>
-						<input type="text" id="streetAddress"/>
+						<div className="input__wrapper col-span-6 md:col-span-2">
+							<label htmlFor="country">Country</label>
+							<input
+								type="text"
+								id="country"
+								defaultValue={senderAddress.country}
+								{...register(`senderAddress.country`)}
+							/>
+						</div>
 					</div>
 					
 					<h3>Bill To</h3>
 					
 					<div className="input__wrapper">
 						<label htmlFor="clientName">Client’s Name</label>
-						<input type="text" id="clientName"/>
+						<input
+							type="text"
+							id="clientName"
+							defaultValue={clientName}
+							{...register(`clientName`)}
+						/>
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="clientEmail">Client’s Email</label>
-						<input type="text" id="clientEmail"/>
+						<input
+							type="text"
+							id="clientEmail"
+							defaultValue={clientEmail}
+							{...register(`clientEmail`)}
+						/>
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="streetAddress2">Street Address</label>
-						<input type="text" id="streetAddress2"/>
+						<input
+							type="text"
+							id="streetAddress2"
+							defaultValue={clientAddress.street}
+							{...register(`clientAddress.street`)}
+						/>
 					</div>
-					<div className="grid grid-cols-2 gap-4">
-						<div className="input__wrapper">
-							<label htmlFor="City">City</label>
-							<input type="text" id="City"/>
+					<div className="grid grid-cols-6 gap-x-4">
+						<div className="input__wrapper col-span-3 md:col-span-2">
+							<label htmlFor="city2">City</label>
+							<input
+								type="text"
+								id="city2"
+								defaultValue={clientAddress.city}
+								{...register(`clientAddress.city`)}
+							/>
 						</div>
-						<div className="input__wrapper">
+						<div className="input__wrapper col-span-3 md:col-span-2">
 							<label htmlFor="postCode2">Post Code</label>
-							<input type="text" id="postCode2"/>
+							<input
+								type="text"
+								id="postCode2"
+								defaultValue={clientAddress.postCode}
+								{...register(`clientAddress.postCode`)}
+							/>
+						</div>
+						<div className="input__wrapper col-span-6 md:col-span-2">
+							<label htmlFor="country2">Country</label>
+							<input
+								type="text"
+								id="country2"
+								defaultValue={clientAddress.country}
+								{...register(`clientAddress.country`)}
+							/>
 						</div>
 					</div>
-					<div className="input__wrapper">
-						<label htmlFor="country2">Country</label>
-						<input type="text" id="country2"/>
-					</div>
-					<div className="input__wrapper">
-						<label htmlFor="invoiceDate">Invoice Date</label>
-						<input type="text" id="invoiceDate"/>
-					</div>
-					<div className="input__wrapper">
-						<label htmlFor="paymentTerms">Payment Terms</label>
-						<input type="text" id="paymentTerms"/>
+					<div className="grid grid-cols-2 gap-x-4">
+						<div className="input__wrapper col-span-2 md:col-span-1">
+							<label htmlFor="invoiceDate">Invoice Date</label>
+							<input
+								type="text"
+								id="invoiceDate"
+								defaultValue={ formatDate(createdAt).toLocaleDateString('en-us', dateOptions)}
+								{...register(`createdAt`)}
+							/>
+						</div>
+						<div className="input__wrapper col-span-2 md:col-span-1">
+							<label htmlFor="paymentTerms">Payment Terms</label>
+							<input
+								type="text"
+								id="paymentTerms"
+								{...register(`paymentTerms`)}
+							/>
+						</div>
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="projectDescription">Project Description</label>
-						<input type="text" id="projectDescription"/>
+						<input
+							type="text"
+							id="projectDescription"
+							defaultValue={description}
+							{...register(`description`)}
+						/>
 					</div>
 					
 					<div className="edit__items">
-						<div className="input__wrapper">
-							<label htmlFor="itemName">Item Name</label>
-							<input type="text" id="itemName"/>
-						</div>
-						<div className="flex justify-between items-center gap-4">
-							<div className="input__wrapper">
-								<label htmlFor="qty">Qty</label>
-								<input type="text" id="qty"/>
-							</div>
-							<div className="input__wrapper">
-								<label htmlFor="price">Price</label>
-								<input type="text" id="price"/>
-							</div>
-							<div className="input__wrapper no-border">
-								<label htmlFor="itemName">total</label>
-								<input type="text" id="itemName"/>
-							</div>
-							<i  className="icon-delete"/>
+						
+						<h1>Item List</h1>
+						
+						<ul>
+							{items.map((item,index) => {
+								return(
+									<li key={index}>
+										<div className="input__wrapper">
+											<label htmlFor={`itemName${index}`}>Item Name</label>
+											<input
+												type="text"
+												id={`itemName${index}`}
+												defaultValue={item.name}
+												{...register(`items.${index}.name`)}
+											/>
+										</div>
+										<div className="flex justify-between items-center gap-4">
+											<div className="input__wrapper">
+												<label htmlFor={`qty${index}`}>Qty</label>
+												<input
+													type="number"
+													id={`qty${index}`}
+													defaultValue={item.quantity}
+													{...register(`items.${index}.quantity`, {valueAsNumber: true})}
+												/>
+											</div>
+											<div className="input__wrapper">
+												<label htmlFor={`price${index}`}>Price</label>
+												<input
+													type="number"
+													id={`price${index}`}
+													defaultValue={item.price}
+													{...register(`items.${index}.price`, {valueAsNumber: true})}
+												/>
+											</div>
+											<div className="input__wrapper no-border">
+												<label htmlFor={`itemName${index}`}>total</label>
+												<input
+													type="number"
+													id={`itemName${index}`}
+													defaultValue={item.total}
+													{...register(`items.${index}.total`, {valueAsNumber: true})}
+												/>
+											</div>
+											<i  className="icon-delete"/>
+										</div>
+									</li>
+								)
+							})}
+						</ul>
+						
+						
+						<a className="btn btn--light btn-full mt-8">+ Add New Item</a>
+						
+						<input
+							className="hidden"
+							type="number"
+							id="total"
+							defaultValue={total}
+							{...register("total", {valueAsNumber: true})}
+						/>
+						<input
+							className="hidden"
+							type="text"
+							id="status"
+							defaultValue={status}
+							{...register("status")}
+						/>
+						
+						<div className="edit__actions">
+							<a onClick={() => setActiveEdit(false)} className="btn btn--light">Cancel</a>
+							<button type="submit" className="btn">Save Changes</button>
 						</div>
 					</div>
 				</form>

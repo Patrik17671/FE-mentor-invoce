@@ -35,6 +35,9 @@
 		border-radius: 8px 8px 0 0
 		@apply p-6 mt-8 flex flex-col gap-6
 
+		ul
+			@apply flex flex-col gap-2
+
 		li
 			@apply flex justify-between items-center
 
@@ -67,6 +70,22 @@
 				font-weight: 700
 
 .edit
-	@apply w-full h-full fixed top-0 left-0 pt-28 px-4 overflow-auto
-	z-index: 40
-	background: $light
+
+	&__content
+		@apply w-full h-full fixed top-0 left-0 pt-28 md:pt-10 px-4 md:pl-28 md:pr-10 bg-white overflow-auto
+		z-index: 40
+		padding-bottom: 150px
+		@media (min-width: 991px)
+			max-width: 720px
+			padding-bottom: 40px
+
+	&__items
+		margin-top: 66px
+
+		h1
+			color: $blue4
+
+	&__actions
+		@apply flex gap-2 justify-end p-6 fixed md:relative left-0 bottom-0 w-full bg-white
+		@media (max-width: 991px)
+			box-shadow: 1px -11px 63px -4px rgba(0,0,0,0.22)

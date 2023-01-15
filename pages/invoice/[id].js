@@ -1,39 +1,49 @@
 import {data} from "../api/data";
 import Link from "next/link";
 import EditInvoice from "../../components/EditInvoice.js"
-export async function getStaticPaths() {
-	// console.log(data)
-	const paths = data.map(invoice => {
-		return {
-			params: {id: invoice.id}
-		}
-	})
-	return {
-		paths: paths,
-		fallback: false,
-	}
-}
+import {useEffect, useState} from "react";
+import { useSelector } from 'react-redux';
+import {selectInvoiceItems} from "../../lib/invoicesSlice.js"
+import {dateOptions, formatDate} from "../../lib/functions";
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
 	const id = context.params.id
 	
 	return{
-		props: {selectedInvoice: id}
+		props: {
+			selectedInvoice: id,
+		},
 	}
 }
 
 export default function Invoice({selectedInvoice}){
-	const invoiceIndex = data.findIndex(x => x.id === selectedInvoice)
-	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = data[invoiceIndex]
 	
-	const dateOptions = {year: 'numeric', month: 'short', day: 'numeric' };
-	const formatDate = (date) => {
-		return new Date(date)
-	}
+	const invoicedata = useSelector(selectInvoiceItems);
+	const invoiceIndex = invoicedata.invoiceItems.findIndex(x => x.id === selectedInvoice)
+	
+	//Fixed error with undefined data after refresh
+	const [invoiceDataState, setInvoiceDataState] = useState({id:"", clientAddress: "", clientEmail: "",senderAddress: "" ,clientName: "",items: [] , description: "", createdAt:"", paymentDue:"",status: "" , total: ""})
+	const [dataChanged, setDataChanged] = useState(false);
+	
+	useEffect(() =>{
+		setInvoiceDataState(invoicedata.invoiceItems[invoiceIndex]);
+	},[dataChanged])
+	
+	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceDataState
+	const [activeEdit, setActiveEdit] = useState(false);
+	
+	
+	console.log(invoiceDataState)
 	
 	return(
 		<div className="content">
-			<EditInvoice />
+			{activeEdit ?
+				(<EditInvoice
+					invoiceData={invoiceDataState}
+					dataChanged={dataChanged}
+					setDataChanged={setDataChanged}
+					setActiveEdit={setActiveEdit} />)
+				: ""}
 			<div className="container">
 				<Link href={"/"} className="back-btn mb-8">
 					<i className="icon-arrow-left"/>
@@ -48,7 +58,7 @@ export default function Invoice({selectedInvoice}){
 						</span>
 					</div>
 					<div className="invoice__actions">
-						<a className="btn btn--light">Edit</a>
+						<a onClick={() => setActiveEdit(true)} className="btn btn--light">Edit</a>
 						<a className="btn btn--delete">Delete</a>
 						<a className="btn btn--primary">Mark as Paid</a>
 					</div>

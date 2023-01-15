@@ -6,7 +6,7 @@ export default function Nav(){
 			<div className="nav__icon">
 				<i className="icon-logo"/>
 			</div>
-			<div className="flex items-center">
+			<div className="nav__profile-wrapper">
 				<div className="nav__mode">
 					<i  className="icon-moon"/>
 				</div>

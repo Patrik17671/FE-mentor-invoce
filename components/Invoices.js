@@ -1,10 +1,6 @@
 import Link from "next/link";
+import {dateOptions, formatDate} from "../lib/functions";
 export default function Invoices({filteredInvoices}){
-	
-	const dateOptions = {year: 'numeric', month: 'short', day: 'numeric' };
-	const formatDate = (date) => {
-		return new Date(date)
-	}
 	
 	return(
 		<ul className="invoices__list">

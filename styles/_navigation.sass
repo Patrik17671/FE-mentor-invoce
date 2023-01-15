@@ -1,8 +1,17 @@
 nav
 	@apply fixed top-0 left-0 flex justify-between w-full z-50
 	background: $gray2
+	@media (min-width: 991px)
+		@apply h-full flex-col
+		width: unset
+		border-radius: 0 20px 20px 0
 
 .nav
+
+	&__profile-wrapper
+		@apply flex items-center md:flex-col
+
+
 	&__icon
 		@apply flex justify-center items-center relative cursor-pointer overflow-hidden
 		border-radius: 0 20px 20px 0
@@ -35,8 +44,10 @@ nav
 			font-size: 20px
 
 	&__profile
-		@apply flex justify-center items-center
+		@apply flex justify-center items-center md:my-8
 		width: 80px
+		@media (min-width: 991px)
+			width: unset
 
 		img
 			@apply rounded-full
