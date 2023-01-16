@@ -1,19 +1,17 @@
 import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
-import {setEditInvoice, setNewItem} from "../lib/invoicesSlice";
+import {setEditInvoice, setNewItem, setRemoveItem} from "../lib/invoicesSlice";
 
 export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
 	
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceData;
 	
-	console.log(items)
-	
 	//Redux dispatch
 	const dispatch = useDispatch();
 	
 	//Form function
-	const {control,register, handleSubmit,setValue, getValues , formState:{ errors }} = useForm({
+	const {control,register, handleSubmit,setValue, getValues, reset , formState:{ errors }} = useForm({
 	});
 	
 	const { invoiceItems, fields } = useFieldArray({
@@ -42,14 +40,25 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 		setDataChanged(!dataChanged);
 	}
 	
+	//Add new empty item to items
 	const handleNewItem = () => {
 		dispatch(setNewItem([
 			{
 				id: id,
-				// items: items.push(...items,{name: "",quantity: "",price: "", total: ""} ),
 			}
 		]))
 		setDataChanged(!dataChanged);
+	}
+	
+	const handleRemoveItem = (name) => {
+		dispatch(setRemoveItem([
+			{
+				id: id,
+				name: name
+			}
+		]))
+		setDataChanged(!dataChanged);
+		reset();
 	}
 	
 	return(
@@ -212,7 +221,6 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													type="number"
 													id={`qty${index}`}
 													defaultValue={item.quantity}
-													value={getValues(`items.${index}.quantity`)}
 													{...register(`items.${index}.quantity`, {valueAsNumber: true, shouldTouch: true , onChange: (e) => {
 															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
 															const totalValue = values.reduce((a, b)=> a*b, 1)
@@ -244,7 +252,7 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													{...register(`items.${index}.total`, {valueAsNumber: true})}
 												/>
 											</div>
-											<i  className="icon-delete"/>
+											<i onClick={() => handleRemoveItem(item.name)} className="icon-delete"/>
 										</div>
 									</li>
 								)
