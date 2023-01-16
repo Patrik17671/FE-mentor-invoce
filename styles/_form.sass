@@ -26,6 +26,12 @@ input[type="checkbox"]
 .input__wrapper
 	@apply mt-6
 
+	&.no-border
+		input
+			@apply pl-0
+			border: 0
+			color: $blue4
+
 	label
 		@apply font-medium
 		font-size: 12px
@@ -41,6 +47,8 @@ input[type="checkbox"]
 		padding: 17px 20px 16px 20px
 		border: 1px solid $blue3
 		border-radius: 4px
+
+
 
 form
 	h3

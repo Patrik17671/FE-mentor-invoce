@@ -11,7 +11,7 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 	const dispatch = useDispatch();
 	
 	//Form function
-	const {control,register, handleSubmit, formState:{ errors }} = useForm({
+	const {control,register, handleSubmit,setValue, getValues , formState:{ errors }} = useForm({
 	});
 	
 	const { invoiceItems, fields } = useFieldArray({
@@ -196,27 +196,45 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 											<div className="input__wrapper">
 												<label htmlFor={`qty${index}`}>Qty</label>
 												<input
+													className="valueInput"
 													type="number"
 													id={`qty${index}`}
 													defaultValue={item.quantity}
-													{...register(`items.${index}.quantity`, {valueAsNumber: true})}
+													value={getValues(`items.${index}.quantity`)}
+													// onChange={() => {
+													// 	const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
+													// 	const totalValue = values.reduce((a, b)=> a*b, 1)
+													// 	setValue(`items.${index}.total`, totalValue)
+													// 	// setValue(`items.${index}.quantity`,(e) => {e.target.value} )
+													// }}
+													{...register(`items.${index}.quantity`, {valueAsNumber: true, shouldTouch: true , onChange: (e) => {
+															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
+															const totalValue = values.reduce((a, b)=> a*b, 1)
+															setValue(`items.${index}.total`, totalValue)
+														}})}
 												/>
 											</div>
 											<div className="input__wrapper">
 												<label htmlFor={`price${index}`}>Price</label>
 												<input
+													className="valueInput"
 													type="number"
 													id={`price${index}`}
 													defaultValue={item.price}
-													{...register(`items.${index}.price`, {valueAsNumber: true})}
+													{...register(`items.${index}.price`, {valueAsNumber: true, onChange: (e) => {
+															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
+															const totalValue = values.reduce((a, b)=> a*b, 1)
+															setValue(`items.${index}.total`, totalValue)
+														}})}
 												/>
 											</div>
 											<div className="input__wrapper no-border">
-												<label htmlFor={`itemName${index}`}>total</label>
+												<label htmlFor={`total${index}`}>total</label>
 												<input
-													type="number"
-													id={`itemName${index}`}
-													defaultValue={item.total}
+													type="text"
+													id={`total${index}`}
+													readOnly={true}
+													value={item.total}
 													{...register(`items.${index}.total`, {valueAsNumber: true})}
 												/>
 											</div>

@@ -47,6 +47,7 @@
 			font-weight: 700
 			display: block
 
+
 	&__item-title
 		color: $black
 
@@ -84,6 +85,15 @@
 
 		h1
 			color: $blue4
+
+		.icon-delete
+			@apply relative cursor-pointer
+			top: 20px
+			transition: all .3s
+			color: $blue4
+
+			&:hover
+				color: $red1 !important
 
 	&__actions
 		@apply flex gap-2 justify-end p-6 fixed md:relative left-0 bottom-0 w-full bg-white
