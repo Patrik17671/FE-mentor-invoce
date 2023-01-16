@@ -1,11 +1,13 @@
 import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
-import {setEditInvoice} from "../lib/invoicesSlice";
+import {setEditInvoice, setNewItem} from "../lib/invoicesSlice";
 
 export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
 	
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceData;
+	
+	console.log(items)
 	
 	//Redux dispatch
 	const dispatch = useDispatch();
@@ -35,6 +37,16 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 				// paymentTerms: formData.paymentTerms,
 				createdAt: formData.createdAt,
 				paymentDue: formData.paymentDue,
+			}
+		]))
+		setDataChanged(!dataChanged);
+	}
+	
+	const handleNewItem = () => {
+		dispatch(setNewItem([
+			{
+				id: id,
+				// items: items.push(...items,{name: "",quantity: "",price: "", total: ""} ),
 			}
 		]))
 		setDataChanged(!dataChanged);
@@ -201,12 +213,6 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													id={`qty${index}`}
 													defaultValue={item.quantity}
 													value={getValues(`items.${index}.quantity`)}
-													// onChange={() => {
-													// 	const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
-													// 	const totalValue = values.reduce((a, b)=> a*b, 1)
-													// 	setValue(`items.${index}.total`, totalValue)
-													// 	// setValue(`items.${index}.quantity`,(e) => {e.target.value} )
-													// }}
 													{...register(`items.${index}.quantity`, {valueAsNumber: true, shouldTouch: true , onChange: (e) => {
 															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
 															const totalValue = values.reduce((a, b)=> a*b, 1)
@@ -246,7 +252,7 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						</ul>
 						
 						
-						<a className="btn btn--light btn-full mt-8">+ Add New Item</a>
+						<a onClick={handleNewItem} className="btn btn--light btn-full mt-8">+ Add New Item</a>
 						
 						<input
 							className="hidden"
