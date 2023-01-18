@@ -16,8 +16,7 @@ export default function Home() {
 	useEffect(() => {
 		setInvoices(JSON.parse(localStorage.getItem('invoicesItems')))
 	}, []);
-
-	console.log(invoices)
+	
 	
 	//Change active statuses
 	const toggleStatus = (status) => {

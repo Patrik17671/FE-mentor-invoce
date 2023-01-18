@@ -3,9 +3,10 @@ import Link from "next/link";
 import EditInvoice from "../../components/EditInvoice.js"
 import {useEffect, useState} from "react";
 import { useSelector } from 'react-redux';
-import {selectInvoiceItems,setAsPaid} from "../../lib/invoicesSlice.js"
+import {selectInvoiceItems,setAsPaid,setDeleteInvoice} from "../../lib/invoicesSlice.js"
 import {dateOptions, formatDate} from "../../lib/functions";
 import {useDispatch} from "react-redux";
+import {useRouter} from "next/router";
 
 export async function getServerSideProps(context) {
 	const id = context.params.id
@@ -19,6 +20,8 @@ export async function getServerSideProps(context) {
 
 export default function Invoice({selectedInvoice}){
 	
+	const route = useRouter();
+	
 	const invoicedata = useSelector(selectInvoiceItems);
 	const invoiceIndex = invoicedata.invoiceItems.findIndex(x => x.id === selectedInvoice)
 	
@@ -31,7 +34,9 @@ export default function Invoice({selectedInvoice}){
 	},[dataChanged])
 	
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceDataState
+	
 	const [activeEdit, setActiveEdit] = useState(false);
+	const [deleteConfirm, setDeleteConfirm] = useState(false);
 	
 	//Redux dispatch
 	const dispatch = useDispatch();
@@ -41,8 +46,26 @@ export default function Invoice({selectedInvoice}){
 		setDataChanged(!dataChanged);
 	}
 	
+	const handleDeleteInvoice = (e) => {
+		e.stopPropagation();
+		dispatch(setDeleteInvoice([{id: id}]));
+		route.push("/");
+	}
+	
 	return(
 		<div className="content">
+			{deleteConfirm ? (
+				<div onClick={() => {setDeleteConfirm(false)}} className="overlay flex justify-center items-center">
+					<div className="delete-confirm">
+						<h1>Confirm Deletion</h1>
+						<p>Are you sure you want to delete invoice #{id}? This action cannot be undone.</p>
+						<div className="delete-confirm__btns">
+							<a onClick={() => {setDeleteConfirm(false)}} className="btn btn--light">Cancel</a>
+							<a onClick={(e) => handleDeleteInvoice(e)} className="btn btn--delete">Delete</a>
+						</div>
+					</div>
+				</div>
+			) : ""}
 			{activeEdit ?
 				(<EditInvoice
 					invoiceData={invoiceDataState}
@@ -65,7 +88,7 @@ export default function Invoice({selectedInvoice}){
 					</div>
 					<div className="invoice__actions">
 						<a onClick={() => setActiveEdit(true)} className="btn btn--light">Edit</a>
-						<a className="btn btn--delete">Delete</a>
+						<a onClick={() => {setDeleteConfirm(true)}} className="btn btn--delete">Delete</a>
 						{status === "pending" ? (<a onClick={handleSetPaid} className="btn btn--primary">Mark as Paid</a>) : ""}
 					</div>
 				</div>
