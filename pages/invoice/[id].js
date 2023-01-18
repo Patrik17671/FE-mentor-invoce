@@ -3,8 +3,9 @@ import Link from "next/link";
 import EditInvoice from "../../components/EditInvoice.js"
 import {useEffect, useState} from "react";
 import { useSelector } from 'react-redux';
-import {selectInvoiceItems} from "../../lib/invoicesSlice.js"
+import {selectInvoiceItems,setAsPaid} from "../../lib/invoicesSlice.js"
 import {dateOptions, formatDate} from "../../lib/functions";
+import {useDispatch} from "react-redux";
 
 export async function getServerSideProps(context) {
 	const id = context.params.id
@@ -32,8 +33,13 @@ export default function Invoice({selectedInvoice}){
 	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceDataState
 	const [activeEdit, setActiveEdit] = useState(false);
 	
+	//Redux dispatch
+	const dispatch = useDispatch();
 	
-	console.log(invoiceDataState)
+	const handleSetPaid = () => {
+		dispatch(setAsPaid([{id: id}]));
+		setDataChanged(!dataChanged);
+	}
 	
 	return(
 		<div className="content">
@@ -60,7 +66,7 @@ export default function Invoice({selectedInvoice}){
 					<div className="invoice__actions">
 						<a onClick={() => setActiveEdit(true)} className="btn btn--light">Edit</a>
 						<a className="btn btn--delete">Delete</a>
-						<a className="btn btn--primary">Mark as Paid</a>
+						{status === "pending" ? (<a onClick={handleSetPaid} className="btn btn--primary">Mark as Paid</a>) : ""}
 					</div>
 				</div>
 				<div className="invoice__wrapper">
