@@ -9,8 +9,9 @@ nav
 .nav
 
 	&__profile-wrapper
-		@apply flex items-center md:flex-col
-
+		@apply flex items-center
+		@media (min-width: 991px)
+			@apply flex-col
 
 	&__icon
 		@apply flex justify-center items-center relative cursor-pointer overflow-hidden
@@ -44,10 +45,11 @@ nav
 			font-size: 20px
 
 	&__profile
-		@apply flex justify-center items-center md:my-8
+		@apply flex justify-center items-center
 		width: 80px
 		@media (min-width: 991px)
 			width: unset
+			@apply my-8
 
 		img
 			@apply rounded-full

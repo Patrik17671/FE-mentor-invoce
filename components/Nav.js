@@ -1,4 +1,3 @@
-// import user from "../assets/images/user.jpg"
 import Image from 'next/image'
 export default function Nav(){
 	return(

@@ -2,10 +2,19 @@ import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {setEditInvoice, setNewItem, setRemoveItem} from "../lib/invoicesSlice";
+import {addDays,returnNum} from "../lib/functions";
+import {useState} from "react";
 
 export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
 	
-	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue,status , total} = invoiceData;
+	//Ivoice data
+	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue, paymentTerms,status , total} = invoiceData;
+	
+	//Payment terms object
+	const paymentTermsOptions = [{name:"Net 1 Day", value: 1},{name:"Net 7 Days", value: 7},{name:"Net 14 Days", value: 14},{name:"Net 30 Days", value: 30}]
+	
+	//Toggle payment terms select
+	const [openPaymentTerms, setOpenPaymentTerms] = useState(false)
 	
 	//Redux dispatch
 	const dispatch = useDispatch();
@@ -18,7 +27,7 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 		control,
 		name: "items" // unique name for your Field Array
 	});
-
+	
 	//Set form data to redux
 	const submitForm = (formData) => {
 		dispatch(setEditInvoice([
@@ -32,9 +41,9 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 				description: formData.description,
 				status: formData.status,
 				total: formData.total,
-				// paymentTerms: formData.paymentTerms,
+				paymentTerms: returnNum(formData.paymentTerms),
 				createdAt: formData.createdAt,
-				paymentDue: formData.paymentDue,
+				paymentDue: addDays(formData.createdAt,returnNum(formData.paymentTerms)),
 			}
 		]))
 		setDataChanged(!dataChanged);
@@ -57,14 +66,22 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 				name: name
 			}
 		]))
-		setDataChanged(!dataChanged);
 		reset();
+		setDataChanged(!dataChanged);
 	}
 	
 	return(
 		<div className="edit">
-			<div className="overlay" onClick={() => setActiveEdit(false)} />
-			<div className="edit__content">
+			<div className="overlay"
+				 onClick={() => {setActiveEdit(false)}}
+			/>
+			<div onClick={
+				(e) => {
+					e.stopPropagation();
+					setOpenPaymentTerms(false);
+				}}
+			 
+				 className="edit__content">
 				<form onSubmit={handleSubmit(submitForm)}>
 					<h1>Edit #{id}</h1>
 					
@@ -171,19 +188,41 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<div className="input__wrapper col-span-2 md:col-span-1">
 							<label htmlFor="invoiceDate">Invoice Date</label>
 							<input
-								type="text"
+								type="date"
 								id="invoiceDate"
-								defaultValue={ formatDate(createdAt).toLocaleDateString('en-us', dateOptions)}
+								defaultValue={ createdAt}
 								{...register(`createdAt`)}
 							/>
 						</div>
-						<div className="input__wrapper col-span-2 md:col-span-1">
+						<div className={`input__wrapper select-input col-span-2 md:col-span-1 ${openPaymentTerms ? "active" : ""}`}>
 							<label htmlFor="paymentTerms">Payment Terms</label>
 							<input
 								type="text"
 								id="paymentTerms"
+								defaultValue={`Net ${paymentTerms} Days`}
+								onClick={(e) => {
+									e.stopPropagation();
+									setOpenPaymentTerms(!openPaymentTerms)
+								}}
 								{...register(`paymentTerms`)}
 							/>
+							<i className="icon-arrow-down" />
+							<ul>
+								{paymentTermsOptions.map((payment, index) => {
+									return(
+										<li key={index}>
+											<label htmlFor={`terms${payment.value}`}>{payment.name}</label>
+											<input
+												type="checkbox"
+												id={`terms${payment.value}`}
+												value={payment.value}
+												onClick={() => setValue(`paymentTerms`,`Net ${payment.value} Days`)}
+											/>
+										</li>
+									)
+								})}
+								
+							</ul>
 						</div>
 					</div>
 					<div className="input__wrapper">
@@ -275,6 +314,13 @@ export default function editInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							id="status"
 							defaultValue={status}
 							{...register("status")}
+						/>
+						<input
+							className="hidden"
+							type="text"
+							id="status"
+							defaultValue={paymentDue}
+							{...register("paymentDue")}
 						/>
 						
 						<div className="edit__actions">

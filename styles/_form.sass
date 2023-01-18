@@ -48,7 +48,46 @@ input[type="checkbox"]
 		border: 1px solid $blue3
 		border-radius: 4px
 
+	&.select-input
+		@apply relative
 
+		&.active
+			i
+				transform: rotate(180deg)
+
+			ul
+				@apply opacity-100
+				pointer-events: auto
+				transform: translateY(0)
+
+		input[type="checkbox"]
+			display: none !important
+
+		i
+			@apply absolute right-4
+			top: 47px
+			font-size: 8px
+			transition: all .3s
+
+		ul
+			@apply absolute left-0 bg-white w-full opacity-0
+			pointer-events: none
+			transform: translateY(-15px)
+			top: 6rem
+			border-radius: 8px
+			box-shadow: 0 10px 31px 1px rgba(0,0,0,0.14)
+			transition: all .3s
+
+			li
+				border-bottom: 1px solid $blue3
+				line-height: 1
+
+			label
+				@apply block font-bold px-6 py-4 cursor-pointer m-0
+				color: $black
+
+				&:hover
+					color: $blue1
 
 form
 	h3
