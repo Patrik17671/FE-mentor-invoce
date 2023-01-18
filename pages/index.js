@@ -1,6 +1,7 @@
 import Head from 'next/head'
-import Invoices from "../components/Invoices";
+import Invoices from "../components/Invoices.js";
 import {useState,useMemo,useEffect} from "react";
+import AddInvoice from "../components/AddInvoice.js"
 
 export default function Home() {
 	
@@ -11,6 +12,7 @@ export default function Home() {
 	const [openFilter, setOpenFilter] = useState(false);
 	const [invoices, setInvoices] = useState([]);
 	const [activeStatuses, setActiveStatuses] = useState([]);
+	const [newInvoice, setNewInvoice] = useState(false);
 
 	//Get data
 	useEffect(() => {
@@ -44,11 +46,12 @@ export default function Home() {
 			</Head>
 			
 			<main>
+				{newInvoice ? (<AddInvoice newInvoiceState={newInvoice} setNewInvoiceState={setNewInvoice} />) : ""}
 				<div className="container">
 					<div className="invoices__header">
 						<div className="invoices__title">
 							<h1>Invoices</h1>
-							{/*<span>{invoices.length} invoces</span>*/}
+							<span>{invoices.length} invoces</span>
 						</div>
 						<div className="invoices__actions">
 							<span onClick={() => setOpenFilter(!openFilter)} className={`invo-filter ${openFilter ? "active" : ""}`}>
@@ -70,7 +73,7 @@ export default function Home() {
 									})}
 								</div>
 							</span>
-							<a className="btn btn--icon">
+							<a onClick={() => setNewInvoice(true)} className="btn btn--icon">
 								<span className="icon">
 									<i className="icon-plus" />
 								</span>

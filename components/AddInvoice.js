@@ -1,20 +1,25 @@
 import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
-import {setEditInvoice, setNewItem, setRemoveItem} from "../lib/invoicesSlice";
+import {setNewInvoice} from "../lib/invoicesSlice";
 import {addDays,returnNum} from "../lib/functions";
 import {useState} from "react";
 
-export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
+export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 	
 	//Ivoice data
-	const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue, paymentTerms,status , total} = invoiceData;
+	// const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue, paymentTerms,status , total} = invoiceData;
 	
 	//Payment terms object
 	const paymentTermsOptions = [{name:"Net 1 Day", value: 1},{name:"Net 7 Days", value: 7},{name:"Net 14 Days", value: 14},{name:"Net 30 Days", value: 30}]
 	
+	//Invoice items
+	const [items, setItems] = useState([{name: "",price: 0,quantity: 1,total: 0}])
+	
+	
 	//Toggle payment terms select
 	const [openPaymentTerms, setOpenPaymentTerms] = useState(false)
+	
 	
 	//Redux dispatch
 	const dispatch = useDispatch();
@@ -30,50 +35,41 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 	
 	//Set form data to redux
 	const submitForm = (formData) => {
-		dispatch(setEditInvoice([
+		dispatch(setNewInvoice([
 			{
-				id: id,
+				id: formData.id,
 				clientName: formData.clientName,
 				clientEmail: formData.clientEmail,
 				clientAddress: {street: formData.clientAddress.street, city: formData.clientAddress.city, postCode: formData.clientAddress.postCode, country: formData.clientAddress.country},
 				senderAddress: {street: formData.senderAddress.street, city: formData.senderAddress.city, postCode: formData.senderAddress.postCode, country: formData.senderAddress.country},
 				items: formData.items,
 				description: formData.description,
-				status: formData.status,
+				status: "pending",
 				total: formData.total,
 				paymentTerms: returnNum(formData.paymentTerms),
 				createdAt: formData.createdAt,
 				paymentDue: addDays(formData.createdAt,returnNum(formData.paymentTerms)),
 			}
 		]))
-		setDataChanged(!dataChanged);
 	}
 	
 	//Add new empty item to items
 	const handleNewItem = () => {
-		dispatch(setNewItem([
-			{
-				id: id,
-			}
-		]))
-		setDataChanged(!dataChanged);
+		const newItems = [...items,items.push({name: "",price: 0,quantity: 1,total: 0})]
+		setItems(newItems);
+		console.log(items)
+		// setItems([...items,{name: "",price: 0,quantity: 1,total: 0}])
 	}
 	
-	const handleRemoveItem = (name) => {
-		dispatch(setRemoveItem([
-			{
-				id: id,
-				name: name
-			}
-		]))
-		reset();
-		setDataChanged(!dataChanged);
+	const handleRemoveItem = (index) => {
+		const newItems = items.splice(index,1)
+		setItems(newItems)
 	}
 	
 	return(
 		<div className="edit">
 			<div className="overlay"
-				 onClick={() => {setActiveEdit(false)}}
+				 onClick={() => {setNewInvoiceState(false)}}
 			/>
 			<div onClick={
 				(e) => {
@@ -81,9 +77,16 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 					setOpenPaymentTerms(false);
 				}}
 			 
-				 className="edit__content">
+				 className="edit__content" >
 				<form onSubmit={handleSubmit(submitForm)}>
-					<h1>Edit #{id}</h1>
+					<h1>New Invoice</h1>
+					<div className="input__wrapper">
+						<label htmlFor="id">Invoice Id</label>
+						<input
+							type="text" id="id"
+							{...register(`id`)}
+						/>
+					</div>
 					
 					<h3>Bill From</h3>
 					
@@ -91,7 +94,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<label htmlFor="streetAddress">Street Address</label>
 						<input
 							type="text" id="streetAddress"
-							defaultValue={senderAddress.street}
 							{...register(`senderAddress.street`)}
 						/>
 						{errors.streetAddress && <span>This field is required</span>}
@@ -102,7 +104,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="city"
-								defaultValue={senderAddress.city}
 								{...register("senderAddress.city", { required: true })}
 							/>
 						</div>
@@ -111,7 +112,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="postCode"
-								defaultValue={senderAddress.postCode}
 								{...register(`senderAddress.postCode`)}
 							/>
 						</div>
@@ -120,7 +120,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="country"
-								defaultValue={senderAddress.country}
 								{...register(`senderAddress.country`)}
 							/>
 						</div>
@@ -133,7 +132,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<input
 							type="text"
 							id="clientName"
-							defaultValue={clientName}
 							{...register(`clientName`)}
 						/>
 					</div>
@@ -142,7 +140,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<input
 							type="text"
 							id="clientEmail"
-							defaultValue={clientEmail}
 							{...register(`clientEmail`)}
 						/>
 					</div>
@@ -151,7 +148,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<input
 							type="text"
 							id="streetAddress2"
-							defaultValue={clientAddress.street}
 							{...register(`clientAddress.street`)}
 						/>
 					</div>
@@ -161,7 +157,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="city2"
-								defaultValue={clientAddress.city}
 								{...register(`clientAddress.city`)}
 							/>
 						</div>
@@ -170,7 +165,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="postCode2"
-								defaultValue={clientAddress.postCode}
 								{...register(`clientAddress.postCode`)}
 							/>
 						</div>
@@ -179,7 +173,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="country2"
-								defaultValue={clientAddress.country}
 								{...register(`clientAddress.country`)}
 							/>
 						</div>
@@ -190,7 +183,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="date"
 								id="invoiceDate"
-								defaultValue={ createdAt}
 								{...register(`createdAt`)}
 							/>
 						</div>
@@ -199,7 +191,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							<input
 								type="text"
 								id="paymentTerms"
-								defaultValue={`Net ${paymentTerms} Days`}
 								onClick={(e) => {
 									e.stopPropagation();
 									setOpenPaymentTerms(!openPaymentTerms)
@@ -230,7 +221,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<input
 							type="text"
 							id="projectDescription"
-							defaultValue={description}
 							{...register(`description`)}
 						/>
 					</div>
@@ -240,7 +230,7 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<h1>Item List</h1>
 						
 						<ul>
-							{items.map((item,index) => {
+							{items?.map((item,index) => {
 								return(
 									<li key={index}>
 										<div className="input__wrapper">
@@ -248,7 +238,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 											<input
 												type="text"
 												id={`itemName${index}`}
-												defaultValue={item.name}
 												{...register(`items.${index}.name`)}
 											/>
 										</div>
@@ -259,7 +248,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													className="valueInput"
 													type="number"
 													id={`qty${index}`}
-													defaultValue={item.quantity}
 													{...register(`items.${index}.quantity`, {valueAsNumber: true, shouldTouch: true , onChange: (e) => {
 															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
 															const totalValue = values.reduce((a, b)=> a*b, 1)
@@ -273,7 +261,6 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													className="valueInput"
 													type="number"
 													id={`price${index}`}
-													defaultValue={item.price}
 													{...register(`items.${index}.price`, {valueAsNumber: true, onChange: (e) => {
 															const values = getValues([`items.${index}.quantity`,`items.${index}.price`]);
 															const totalValue = values.reduce((a, b)=> a*b, 1)
@@ -291,7 +278,7 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 													{...register(`items.${index}.total`, {valueAsNumber: true})}
 												/>
 											</div>
-											<i onClick={() => handleRemoveItem(item.name)} className="icon-delete"/>
+											<i onClick={() => handleRemoveItem(index)} className="icon-delete"/>
 										</div>
 									</li>
 								)
@@ -305,21 +292,18 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							className="hidden"
 							type="number"
 							id="total"
-							defaultValue={total}
 							{...register("total", {valueAsNumber: true})}
 						/>
 						<input
 							className="hidden"
 							type="text"
 							id="status"
-							defaultValue={status}
 							{...register("status")}
 						/>
 						<input
 							className="hidden"
 							type="text"
 							id="status"
-							defaultValue={paymentDue}
 							{...register("paymentDue")}
 						/>
 						
