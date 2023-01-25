@@ -1,14 +1,10 @@
-import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {setNewInvoice} from "../lib/invoicesSlice";
 import {addDays,returnNum} from "../lib/functions";
 import {useState} from "react";
 
-export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
-	
-	//Ivoice data
-	// const {id, clientAddress, clientEmail,senderAddress ,clientName,items , description, createdAt, paymentDue, paymentTerms,status , total} = invoiceData;
+export default function AddInvoice({setNewInvoiceState}){
 	
 	//Payment terms object
 	const paymentTermsOptions = [{name:"Net 1 Day", value: 1},{name:"Net 7 Days", value: 7},{name:"Net 14 Days", value: 14},{name:"Net 30 Days", value: 30}]
@@ -16,10 +12,8 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 	//Invoice items
 	const [items, setItems] = useState([{name: "",price: 0,quantity: 1,total: 0}])
 	
-	
 	//Toggle payment terms select
 	const [openPaymentTerms, setOpenPaymentTerms] = useState(false)
-	
 	
 	//Redux dispatch
 	const dispatch = useDispatch();
@@ -28,6 +22,7 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 	const {control,register, handleSubmit,setValue, getValues, reset , formState:{ errors }} = useForm({
 	});
 	
+	//Form dynamic inputs init
 	const { invoiceItems, fields } = useFieldArray({
 		control,
 		name: "items" // unique name for your Field Array
@@ -44,26 +39,37 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 				senderAddress: {street: formData.senderAddress.street, city: formData.senderAddress.city, postCode: formData.senderAddress.postCode, country: formData.senderAddress.country},
 				items: formData.items,
 				description: formData.description,
-				status: "pending",
+				status: formData.status,
 				total: formData.total,
 				paymentTerms: returnNum(formData.paymentTerms),
 				createdAt: formData.createdAt,
 				paymentDue: addDays(formData.createdAt,returnNum(formData.paymentTerms)),
 			}
-		]))
+		]));
+		setNewInvoiceState(false);
 	}
 	
 	//Add new empty item to items
 	const handleNewItem = () => {
 		const newItems = [...items,items.push({name: "",price: 0,quantity: 1,total: 0})]
 		setItems(newItems);
-		console.log(items)
-		// setItems([...items,{name: "",price: 0,quantity: 1,total: 0}])
 	}
 	
+	//Remove item from form
 	const handleRemoveItem = (index) => {
-		const newItems = items.splice(index,1)
-		setItems(newItems)
+		const newItems = items.splice(index,1);
+		setItems(newItems);
+	}
+	
+	//Get total value of items
+	const handleTotal = () => {
+		let values = getValues(`items`);
+		let sum = 0;
+		const getTotals = (item) => {
+			sum += item.total;
+		}
+		values.forEach(getTotals)
+		setValue("total",sum);
 	}
 	
 	return(
@@ -79,7 +85,7 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 			 
 				 className="edit__content" >
 				<form onSubmit={handleSubmit(submitForm)}>
-					<h1>New Invoice</h1>
+					<h1 >New Invoice</h1>
 					<div className="input__wrapper">
 						<label htmlFor="id">Invoice Id</label>
 						<input
@@ -292,12 +298,14 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 							className="hidden"
 							type="number"
 							id="total"
+							value={getValues("total")}
 							{...register("total", {valueAsNumber: true})}
 						/>
 						<input
 							className="hidden"
 							type="text"
 							id="status"
+							value={"pending"}
 							{...register("status")}
 						/>
 						<input
@@ -307,9 +315,22 @@ export default function AddInvoice({newInvoiceState, setNewInvoiceState}){
 							{...register("paymentDue")}
 						/>
 						
-						<div className="edit__actions">
-							<a onClick={() => setActiveEdit(false)} className="btn btn--light">Cancel</a>
-							<button type="submit" className="btn">Save Changes</button>
+						<div className="edit__actions new-invoice">
+							<a onClick={() => setNewInvoiceState(false)} className="btn btn--light">Discard</a>
+							<div>
+								<button type="submit" onClick={() => {
+									setValue("status","draft");
+									handleTotal();
+								}}
+										className="btn">Save as Draft
+								</button>
+								<button type="submit" onClick={() => {
+									setValue("status","pending");
+									handleTotal();
+								}}
+										className="btn">Save & Send
+								</button>
+							</div>
 						</div>
 					</div>
 				</form>

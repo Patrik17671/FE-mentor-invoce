@@ -98,8 +98,14 @@
 
 	&__actions
 		@apply flex gap-2 justify-end p-6 fixed md:relative left-0 bottom-0 w-full bg-white
-		@media (max-width: 991px)
+		@media (max-width: 768px)
 			box-shadow: 1px -11px 63px -4px rgba(0,0,0,0.22)
+
+		&.new-invoice
+			@apply justify-between
+
+			div
+				@apply flex gap-2
 
 .delete-confirm
 	@apply bg-white p-6 md:p-10 mx-4

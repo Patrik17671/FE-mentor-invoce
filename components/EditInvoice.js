@@ -47,6 +47,7 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 			}
 		]))
 		setDataChanged(!dataChanged);
+		setActiveEdit(false);
 	}
 	
 	//Add new empty item to items
@@ -68,6 +69,16 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 		]))
 		reset();
 		setDataChanged(!dataChanged);
+	}
+	
+	const handleTotal = () => {
+		let values = getValues(`items`);
+		let sum = 0;
+		const getTotals = (item) => {
+			sum += item.total;
+		}
+		values.forEach(getTotals)
+		setValue("total",sum);
 	}
 	
 	return(
@@ -325,7 +336,13 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						
 						<div className="edit__actions">
 							<a onClick={() => setActiveEdit(false)} className="btn btn--light">Cancel</a>
-							<button type="submit" className="btn">Save Changes</button>
+							<button
+								type="submit"
+								className="btn"
+								onClick={handleTotal}
+							>
+								Save Changes
+							</button>
 						</div>
 					</div>
 				</form>
