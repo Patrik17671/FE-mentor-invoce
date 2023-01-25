@@ -1,4 +1,3 @@
-import {dateOptions, formatDate} from "../lib/functions";
 import {useForm,useFieldArray} from "react-hook-form";
 import {useDispatch} from "react-redux";
 import {setEditInvoice, setNewItem, setRemoveItem} from "../lib/invoicesSlice";
@@ -103,9 +102,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						<input
 							type="text" id="streetAddress"
 							defaultValue={senderAddress.street}
-							{...register(`senderAddress.street`)}
+							{...register(`senderAddress.street`,{ required: true })}
 						/>
-						{errors.streetAddress && <span>This field is required</span>}
+						{errors.senderAddress?.street ? (<span className="error">This field is required</span>) : ""}
 					</div>
 					<div className="grid grid-cols-6 gap-x-4">
 						<div className="input__wrapper col-span-3 md:col-span-2">
@@ -116,6 +115,7 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								defaultValue={senderAddress.city}
 								{...register("senderAddress.city", { required: true })}
 							/>
+							{errors.senderAddress?.city ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-3 md:col-span-2">
 							<label htmlFor="postCode">Post Code</label>
@@ -123,8 +123,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="text"
 								id="postCode"
 								defaultValue={senderAddress.postCode}
-								{...register(`senderAddress.postCode`)}
+								{...register(`senderAddress.postCode`, { required: true })}
 							/>
+							{errors.senderAddress?.postCode ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-6 md:col-span-2">
 							<label htmlFor="country">Country</label>
@@ -132,8 +133,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="text"
 								id="country"
 								defaultValue={senderAddress.country}
-								{...register(`senderAddress.country`)}
+								{...register(`senderAddress.country`, { required: true })}
 							/>
+							{errors.senderAddress?.country ? <span className="error">This field is required</span> : ""}
 						</div>
 					</div>
 					
@@ -145,17 +147,26 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							type="text"
 							id="clientName"
 							defaultValue={clientName}
-							{...register(`clientName`)}
+							{...register(`clientName`, { required: true })}
 						/>
+						{errors.clientName ? <span className="error">This field is required</span> : ""}
 					</div>
 					<div className="input__wrapper">
-						<label htmlFor="clientEmail">Client’s Email</label>
+						<label onClick={() => console.log(errors)} htmlFor="clientEmail">Client’s Email</label>
 						<input
 							type="text"
 							id="clientEmail"
 							defaultValue={clientEmail}
-							{...register(`clientEmail`)}
+							{...register(`clientEmail`,
+								{
+									required: "Email is required",
+									pattern: {
+										value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+										message: "Please enter a valid email"
+									},
+								})}
 						/>
+						{errors.clientEmail ? <span className="error">{errors.clientEmail?.message}</span> : ""}
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="streetAddress2">Street Address</label>
@@ -163,8 +174,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							type="text"
 							id="streetAddress2"
 							defaultValue={clientAddress.street}
-							{...register(`clientAddress.street`)}
+							{...register(`clientAddress.street`, { required: true })}
 						/>
+						{errors.clientAddress?.street ? <span className="error">This field is required</span> : ""}
 					</div>
 					<div className="grid grid-cols-6 gap-x-4">
 						<div className="input__wrapper col-span-3 md:col-span-2">
@@ -173,8 +185,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="text"
 								id="city2"
 								defaultValue={clientAddress.city}
-								{...register(`clientAddress.city`)}
+								{...register(`clientAddress.city`, { required: true })}
 							/>
+							{errors.clientAddress?.city ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-3 md:col-span-2">
 							<label htmlFor="postCode2">Post Code</label>
@@ -182,8 +195,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="text"
 								id="postCode2"
 								defaultValue={clientAddress.postCode}
-								{...register(`clientAddress.postCode`)}
+								{...register(`clientAddress.postCode`, { required: true })}
 							/>
+							{errors.clientAddress?.postCode ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-6 md:col-span-2">
 							<label htmlFor="country2">Country</label>
@@ -191,8 +205,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="text"
 								id="country2"
 								defaultValue={clientAddress.country}
-								{...register(`clientAddress.country`)}
+								{...register(`clientAddress.country`, { required: true })}
 							/>
+							{errors.clientAddress?.country ? <span className="error">This field is required</span> : ""}
 						</div>
 					</div>
 					<div className="grid grid-cols-2 gap-x-4">
@@ -202,8 +217,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 								type="date"
 								id="invoiceDate"
 								defaultValue={ createdAt}
-								{...register(`createdAt`)}
+								{...register(`createdAt`, { required: true })}
 							/>
+							{errors.createdAt ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className={`input__wrapper select-input col-span-2 md:col-span-1 ${openPaymentTerms ? "active" : ""}`}>
 							<label htmlFor="paymentTerms">Payment Terms</label>
@@ -242,8 +258,9 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 							type="text"
 							id="projectDescription"
 							defaultValue={description}
-							{...register(`description`)}
+							{...register(`description`, { required: true })}
 						/>
+							{errors.description ? <span className="error">This field is required</span> : ""}
 					</div>
 					
 					<div className="edit__items">

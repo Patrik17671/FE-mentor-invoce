@@ -1,7 +1,7 @@
 nav
 	@apply fixed top-0 left-0 flex justify-between w-full z-50
 	background: $gray2
-	@media (min-width: 991px)
+	@media (min-width: $tablet-max)
 		@apply h-full flex-col
 		width: unset
 		border-radius: 0 20px 20px 0
@@ -10,7 +10,7 @@ nav
 
 	&__profile-wrapper
 		@apply flex items-center
-		@media (min-width: 991px)
+		@media (min-width: $tablet-max)
 			@apply flex-col
 
 	&__icon
@@ -47,7 +47,7 @@ nav
 	&__profile
 		@apply flex justify-center items-center
 		width: 80px
-		@media (min-width: 991px)
+		@media (min-width: $tablet-max)
 			width: unset
 			@apply my-8
 

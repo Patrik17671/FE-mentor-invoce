@@ -76,7 +76,7 @@
 		@apply w-full h-full fixed top-0 left-0 pt-28 md:pt-10 px-4 md:pl-28 md:pr-10 bg-white overflow-auto
 		z-index: 40
 		padding-bottom: 150px
-		@media (min-width: 991px)
+		@media (min-width: $tablet-max)
 			max-width: 720px
 			padding-bottom: 40px
 			border-radius: 0 20px 20px 0
@@ -98,7 +98,7 @@
 
 	&__actions
 		@apply flex gap-2 justify-end p-6 fixed md:relative left-0 bottom-0 w-full bg-white
-		@media (max-width: 768px)
+		@media (max-width: $tablet-max)
 			box-shadow: 1px -11px 63px -4px rgba(0,0,0,0.22)
 
 		&.new-invoice

@@ -92,6 +92,7 @@ export default function AddInvoice({setNewInvoiceState}){
 							type="text" id="id"
 							{...register(`id`)}
 						/>
+						{errors.streetAddress ? <span>This field is required</span> : ""}
 					</div>
 					
 					<h3>Bill From</h3>
@@ -102,7 +103,7 @@ export default function AddInvoice({setNewInvoiceState}){
 							type="text" id="streetAddress"
 							{...register(`senderAddress.street`)}
 						/>
-						{errors.streetAddress && <span>This field is required</span>}
+						{errors.streetAddress ? <span>This field is required</span> : ""}
 					</div>
 					<div className="grid grid-cols-6 gap-x-4">
 						<div className="input__wrapper col-span-3 md:col-span-2">
@@ -112,6 +113,7 @@ export default function AddInvoice({setNewInvoiceState}){
 								id="city"
 								{...register("senderAddress.city", { required: true })}
 							/>
+							{errors.senderAddress?.city ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-3 md:col-span-2">
 							<label htmlFor="postCode">Post Code</label>
@@ -120,6 +122,7 @@ export default function AddInvoice({setNewInvoiceState}){
 								id="postCode"
 								{...register(`senderAddress.postCode`)}
 							/>
+							{errors.senderAddress?.postCode ? <span className="error">This field is required</span> : ""}
 						</div>
 						<div className="input__wrapper col-span-6 md:col-span-2">
 							<label htmlFor="country">Country</label>
@@ -128,6 +131,7 @@ export default function AddInvoice({setNewInvoiceState}){
 								id="country"
 								{...register(`senderAddress.country`)}
 							/>
+							{errors.senderAddress?.country ? <span className="error">This field is required</span> : ""}
 						</div>
 					</div>
 					
@@ -140,14 +144,23 @@ export default function AddInvoice({setNewInvoiceState}){
 							id="clientName"
 							{...register(`clientName`)}
 						/>
+						{errors.clientName ? <span className="error">This field is required</span> : ""}
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="clientEmail">Client’s Email</label>
 						<input
 							type="text"
 							id="clientEmail"
-							{...register(`clientEmail`)}
+							{...register(`clientEmail`,
+								{
+									required: "Email is required",
+									pattern: {
+										value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+										message: "Please enter a valid email"
+									},
+								})}
 						/>
+						{errors.clientEmail ? <span className="error">{errors.clientEmail?.message}</span> : ""}
 					</div>
 					<div className="input__wrapper">
 						<label htmlFor="streetAddress2">Street Address</label>
@@ -229,6 +242,7 @@ export default function AddInvoice({setNewInvoiceState}){
 							id="projectDescription"
 							{...register(`description`)}
 						/>
+						{errors.projectDescription ? <span className="error">This field is required</span> : ""}
 					</div>
 					
 					<div className="edit__items">
