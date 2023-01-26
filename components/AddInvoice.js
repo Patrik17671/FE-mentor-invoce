@@ -4,7 +4,10 @@ import {setNewInvoice} from "../lib/invoicesSlice";
 import {addDays,returnNum} from "../lib/functions";
 import {useState} from "react";
 
-export default function AddInvoice({setNewInvoiceState}){
+import { motion } from "framer-motion"
+import {fadeInAnim, fadeLeftAnim} from "../lib/animations";
+
+export default function AddInvoice({newInvoiceState,setNewInvoiceState}){
 	
 	//Payment terms object
 	const paymentTermsOptions = [{name:"Net 1 Day", value: 1},{name:"Net 7 Days", value: 7},{name:"Net 14 Days", value: 14},{name:"Net 30 Days", value: 30}]
@@ -72,27 +75,42 @@ export default function AddInvoice({setNewInvoiceState}){
 		setValue("total",sum);
 	}
 	
+	
 	return(
-		<div className="edit">
+		<motion.div
+			className="edit"
+			animate={fadeInAnim.show}
+			initial={fadeInAnim.hidden}
+			exit={fadeInAnim.hidden}
+		>
 			<div className="overlay"
 				 onClick={() => {setNewInvoiceState(false)}}
 			/>
-			<div onClick={
+			<motion.div onClick={
 				(e) => {
 					e.stopPropagation();
 					setOpenPaymentTerms(false);
 				}}
-			 
-				 className="edit__content" >
+				animate={fadeLeftAnim.show}
+				initial={fadeLeftAnim.hidden}
+				exit={fadeLeftAnim.hidden}
+				transition={{type:"tween"}}
+				className="edit__content" >
 				<form onSubmit={handleSubmit(submitForm)}>
 					<h1 >New Invoice</h1>
 					<div className="input__wrapper">
 						<label htmlFor="id">Invoice Id</label>
 						<input
 							type="text" id="id"
-							{...register(`id`)}
+							{...register(`id`, {
+									required: "ID is required",
+									pattern: {
+										value: /[A-Z]{2}[0-9]{4}/,
+										message: "The ID must contain two capital letters and four numbers!"
+									}
+							})}
 						/>
-						{errors.streetAddress ? <span>This field is required</span> : ""}
+						{errors.id ? <span>{errors.id?.message}</span> : ""}
 					</div>
 					
 					<h3>Bill From</h3>
@@ -348,7 +366,7 @@ export default function AddInvoice({setNewInvoiceState}){
 						</div>
 					</div>
 				</form>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	)
 }

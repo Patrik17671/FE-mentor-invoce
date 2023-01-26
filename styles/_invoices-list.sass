@@ -12,7 +12,7 @@
 		@apply flex items-center
 
 		.invo-filter
-			@apply relative pr-8 font-bold
+			@apply relative pr-8 font-bold cursor-pointer
 			margin-right: 18px
 
 			i
@@ -38,8 +38,14 @@
 				transition: all .3s
 				border-radius: 8px
 				box-shadow: 0 10px 31px 1px rgba(0,0,0,0.14)
+				z-index: 200
+
+				label
+					@apply cursor-pointer
 
 	&__list
+		@apply relative
+		z-index: 10
 
 		a
 			@apply grid md:flex md:justify-between md:items-center grid-cols-2 grid-rows-3 w-full mb-4 px-6 md:px-8 py-6 md:py-4 bg-white

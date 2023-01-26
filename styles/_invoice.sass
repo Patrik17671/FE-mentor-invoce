@@ -71,10 +71,12 @@
 				font-weight: 700
 
 .edit
+	@apply relative
+	z-index: 100
 
 	&__content
 		@apply w-full h-full fixed top-0 left-0 pt-28 md:pt-10 px-4 md:pl-28 md:pr-10 bg-white overflow-auto
-		z-index: 40
+		z-index: 140
 		padding-bottom: 150px
 		@media (min-width: $tablet-max)
 			max-width: 720px

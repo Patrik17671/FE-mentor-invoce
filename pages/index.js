@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Invoices from "../components/Invoices.js";
 import {useState,useMemo,useEffect} from "react";
 import AddInvoice from "../components/AddInvoice.js"
+import {AnimatePresence} from "framer-motion";
 
 export default function Home() {
 	
@@ -46,7 +47,9 @@ export default function Home() {
 			</Head>
 			
 			<main>
-				{newInvoice ? (<AddInvoice newInvoiceState={newInvoice} setNewInvoiceState={setNewInvoice} />) : ""}
+				<AnimatePresence>
+					{newInvoice ? (<AddInvoice newInvoiceState={newInvoice} setNewInvoiceState={setNewInvoice} />) : ""}
+				</AnimatePresence>
 				<div className="container">
 					<div className="invoices__header">
 						<div className="invoices__title">

@@ -4,6 +4,9 @@ import {setEditInvoice, setNewItem, setRemoveItem} from "../lib/invoicesSlice";
 import {addDays,returnNum} from "../lib/functions";
 import {useState} from "react";
 
+import { motion } from "framer-motion"
+import {fadeInAnim, fadeLeftAnim} from "../lib/animations";
+
 export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDataChanged}){
 	
 	//Ivoice data
@@ -81,17 +84,26 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 	}
 	
 	return(
-		<div className="edit">
+		<motion.div
+			className="edit"
+			animate={fadeInAnim.show}
+			initial={fadeInAnim.hidden}
+			exit={fadeInAnim.hidden}
+		>
 			<div className="overlay"
 				 onClick={() => {setActiveEdit(false)}}
 			/>
-			<div onClick={
+			<motion.div onClick={
 				(e) => {
 					e.stopPropagation();
 					setOpenPaymentTerms(false);
 				}}
-			 
-				 className="edit__content">
+			 animate={fadeLeftAnim.show}
+			 initial={fadeLeftAnim.hidden}
+			 exit={fadeLeftAnim.hidden}
+			 transition={{type:"tween"}}
+			 className="edit__content"
+			>
 				<form onSubmit={handleSubmit(submitForm)}>
 					<h1>Edit #{id}</h1>
 					
@@ -363,7 +375,7 @@ export default function EditInvoice({setActiveEdit,invoiceData,dataChanged,setDa
 						</div>
 					</div>
 				</form>
-			</div>
-		</div>
+			</motion.div>
+		</motion.div>
 	)
 }

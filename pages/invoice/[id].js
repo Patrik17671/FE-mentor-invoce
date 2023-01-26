@@ -7,6 +7,7 @@ import {selectInvoiceItems,setAsPaid,setDeleteInvoice} from "../../lib/invoicesS
 import {dateOptions, formatDate} from "../../lib/functions";
 import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
+import {AnimatePresence} from "framer-motion";
 
 export async function getServerSideProps(context) {
 	const id = context.params.id
@@ -66,13 +67,16 @@ export default function Invoice({selectedInvoice}){
 					</div>
 				</div>
 			) : ""}
-			{activeEdit ?
-				(<EditInvoice
-					invoiceData={invoiceDataState}
-					dataChanged={dataChanged}
-					setDataChanged={setDataChanged}
-					setActiveEdit={setActiveEdit} />)
-				: ""}
+			<AnimatePresence>
+				{activeEdit ?
+					(<EditInvoice
+						invoiceData={invoiceDataState}
+						dataChanged={dataChanged}
+						setDataChanged={setDataChanged}
+						setActiveEdit={setActiveEdit} />)
+					: ""}
+			</AnimatePresence>
+			
 			<div className="container">
 				<Link href={"/"} className="back-btn mb-8">
 					<i className="icon-arrow-left"/>
